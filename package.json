@@ -1,0 +1,32 @@
+{
+  "name": "web-project-es",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "babel-node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erickaugustor/web-project-es.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/erickaugustor/web-project-es/issues"
+  },
+  "homepage": "https://github.com/erickaugustor/web-project-es#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "nodemon": "^1.18.3",
+    "sequelize": "^4.38.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^13.0.0",
+    "eslint-plugin-import": "^2.13.0"
+  }
+}
