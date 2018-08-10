@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "babel-node app.js --presets es2015,stage-2"
+    "start": "babel-node restful-api/app.js --presets es2015,stage-2"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,7 @@
   "homepage": "https://github.com/erickaugustor/web-project-es#readme",
   "dependencies": {
     "express": "^4.16.3",
+    "mysql2": "^1.6.1",
     "nodemon": "^1.18.3",
     "sequelize": "^4.38.0"
   },

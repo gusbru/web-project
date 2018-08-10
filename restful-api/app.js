@@ -1,12 +1,20 @@
 import express from 'express';
 
-/*
-    import route from './routes/route';
-*/
+import initializer from './config/init';
+import initORM from './services/db';
 
-const port = process.env.PORT || 3000;
+import user from './routes/user';
+
+// const port = process.env.PORT || 3000;
+const port = 3005;
+
 const app = express();
 
-app.get('/', (req, res) => res.send('Hello World!'));
+initORM(app);
+app.orm = app.get('orm');
+
+app.use('/', initializer(app));
+
+app.use('/', user);
 
 app.listen(port, () => console.log(`Listening on port ${port}...`));

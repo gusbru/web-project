@@ -4,6 +4,6 @@ import Sequelize from 'sequelize';
 // This is about the database or the test
 
 // database, username, password
-export default new Sequelize('web', 'root', '1234', {
-	dialect: 'msysql',
+export default new Sequelize('web', 'root', 'password', {
+	dialect: 'mysql',
 });
