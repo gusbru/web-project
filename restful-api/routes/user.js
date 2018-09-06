@@ -2,7 +2,7 @@ import express from 'express';
 
 const routes = express.Router();
 
-routes.get('/', async (req, res) => {
+routes.get('/carlos', async (req, res) => {
   const a = await req.orm.User.findAll();
   res.send(a);
 /*

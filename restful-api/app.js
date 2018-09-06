@@ -17,4 +17,5 @@ app.use('/', initializer(app));
 
 app.use('/', user);
 
+
 app.listen(port, () => console.log(`Listening on port ${port}...`));
