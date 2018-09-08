@@ -5,14 +5,18 @@ import wrapAsync from '../middlewares/wrapAsync';
 const routes = express.Router();
 
 routes.get('/', wrapAsync(async (req, res) => {
-  const a = await req.orm.User.findAll();
-  res.send(a);
+  // const a = await req.orm.User.findAll();
+  const users = await req.orm.query('select * from users', { type: req.orm.QueryTypes.SELECT});
+  
+  // Try error:
+  // throw new Error('sla mano')
+  
+  res.send(users);
   
 /*
   Promise way:
     .then(users => res.send(users))
     .catch((err) => {
-      console.log(err);
       res.status(404).send({ error: 'Something failed!' });
     });
 */
