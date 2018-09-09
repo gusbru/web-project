@@ -1,10 +1,9 @@
 import orm from '../config/db';
 
-orm.import(`${__dirname}/../models/User`);
+orm.import(`${__dirname}/../models/Aluno`);
 
 const initORM = (app) => {
-	// console.log(orm.query("SELECT * FROM users"));
-	orm.User = orm.models.users;
+	orm.Aluno = orm.models.alunos;
 	app.set('orm', orm);
 };
 

@@ -1,6 +1,6 @@
 export default (sequelize, DataTypes) => (
-	sequelize.define('users', {
-		username: {
+	sequelize.define('alunos', {
+		login: {
 			type: DataTypes.TEXT,
 			allowNull: false,
 		},
