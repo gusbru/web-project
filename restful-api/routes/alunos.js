@@ -1,4 +1,5 @@
 import express from 'express';
+import bcrypt from 'bcrypt';
 import _ from 'lodash';
 
 import validateAluno from '../validations/alunos';
@@ -26,9 +27,13 @@ routes.post('/', wrapAsync(async (req, res) => {
 
   if (alunos[0]) return res.status(400).send('Aluno já registrado.');
 
+
+  const salt = await bcrypt.genSalt(10);
+  const senhaHashed = await bcrypt.hash(password, salt);
+
   alunos = await req.orm.query(`INSERT INTO alunos VALUES (
     '${login}',
-    '${senha}') `, { type: req.orm.QueryTypes.INSERT });
+    '${senhaHashed }')`, { type: req.orm.QueryTypes.INSERT });
 
   res.send(_.pick(req.body, ['login']));
 }));

@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/erickaugustor/web-project-es#readme",
   "dependencies": {
+    "bcrypt": "^3.0.0",
     "body-parser": "^1.18.3",
     "express": "^4.16.3",
     "joi": "^13.6.0",
