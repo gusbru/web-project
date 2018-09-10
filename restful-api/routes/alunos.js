@@ -29,7 +29,7 @@ routes.post('/', wrapAsync(async (req, res) => {
 
 
   const salt = await bcrypt.genSalt(10);
-  const senhaHashed = await bcrypt.hash(password, salt);
+  const senhaHashed = await bcrypt.hash(senha, salt);
 
   alunos = await req.orm.query(`INSERT INTO alunos VALUES (
     '${login}',

@@ -3,6 +3,7 @@ export default handler =>
     try {
       await handler(req, res, next);
     } catch (ex) {
+      console.log(ex)
       next(ex);
     }
   };

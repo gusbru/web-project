@@ -4,7 +4,7 @@ import initializer from './config/init';
 import initORM from './services/db';
 import bodyParser from 'body-parser';
 
-
+import auth from './routes/auth';
 import alunos from './routes/alunos';
 import error from './middlewares/error';	
 
@@ -21,6 +21,7 @@ app.use('/', initializer(app));
 app.use(bodyParser.json());
 
 app.use('/api/alunos', alunos);
+app.use('/api/auth', auth);
 
 app.use(error);
 
