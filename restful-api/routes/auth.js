@@ -1,6 +1,6 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
-import _ from 'lodash';
+import jwt from 'jsonwebtoken';
 
 import validate from '../validations/auth';
 import wrapAsync from '../middlewares/wrapAsync';
@@ -24,7 +24,9 @@ routes.post('/', wrapAsync(async (req, res) => {
   const validPassword = await bcrypt.compare(senha, alunos[0]['senha'])
   if (!validPassword) return res.status(400).send('Email ou senha inválido.');
 
-  res.send(true);
+  const token = jwt.sign({ _id: login }, 'privateKey');
+
+  res.send(token);
 }));
 
 export default routes;

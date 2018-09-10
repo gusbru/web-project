@@ -1,4 +1,5 @@
 import express from 'express';
+import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import _ from 'lodash';
 
@@ -35,7 +36,8 @@ routes.post('/', wrapAsync(async (req, res) => {
     '${login}',
     '${senhaHashed }')`, { type: req.orm.QueryTypes.INSERT });
 
-  res.send(_.pick(req.body, ['login']));
+  const token = jwt.sign({ _id: login }, 'privateKey');
+  res.header('x-auth-token', token).send(_.pick(req.body, ['login']));
 }));
 
 export default routes;
