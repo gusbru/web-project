@@ -6,10 +6,11 @@ export default (req, res, next) => {
 	if (!token) res.status(401).send('Acesso negado. Sem token.');
   
 	try {
+		// TODO: protect the key
 		const decoded = jwt.verify(token, 'privateKey');
 		req.user = decoded;
 		next();
 	} catch (ex) {
-		res.status(400).send('Token invalido');
+		res.status(400).send('Token inválido');
 	}
 };

@@ -3,14 +3,28 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import _ from 'lodash';
 
+import auth from '../middlewares/auth';
+import generateToken from '../services/generateToken';
+
 import validateAluno from '../validations/alunos';
 import wrapAsync from '../middlewares/wrapAsync';
 
 const routes = express.Router();
 
-routes.get('/', wrapAsync(async (req, res) => {
-  const alunos = await req.orm.query('SELECT * FROM alunos',
+routes.get('/me', auth, wrapAsync(async (req, res) => {
+  //Need JWT user in req
+  const alunos = await req.orm.query(
+    `SELECT login FROM alunos WHERE login = '${req.user._id}'`,
     { type: req.orm.QueryTypes.SELECT });
+
+  res.send(alunos);
+}));
+
+routes.get('/', auth, wrapAsync(async (req, res) => {
+  const alunos = await req.orm.query(
+    `SELECT * FROM alunos`,
+    { type: req.orm.QueryTypes.SELECT }
+  );
 
   res.send(alunos);
 }));
@@ -36,7 +50,7 @@ routes.post('/', wrapAsync(async (req, res) => {
     '${login}',
     '${senhaHashed }')`, { type: req.orm.QueryTypes.INSERT });
 
-  const token = jwt.sign({ _id: login }, 'privateKey');
+  const token = generateToken(login);
   res.header('x-auth-token', token).send(_.pick(req.body, ['login']));
 }));
 
