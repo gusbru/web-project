@@ -1,3 +1,4 @@
+/*
 export default (sequelize, DataTypes) => (
 	sequelize.define('alunos', {
 		login: {
@@ -12,3 +13,4 @@ export default (sequelize, DataTypes) => (
 		timestamps: false,
 	})
 );
+*/
