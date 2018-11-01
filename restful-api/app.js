@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 
 import auth from './routes/auth';
 import alunos from './routes/alunos';
+import questoes from './routes/questoes';
 import error from './middlewares/error';	
 
 // const port = process.env.PORT || 3000;
@@ -21,6 +22,7 @@ app.use('/', initializer(app));
 app.use(bodyParser.json());
 
 app.use('/api/alunos', alunos);
+app.use('/api/questoes', questoes);
 app.use('/api/auth', auth);
 
 app.use(error);

@@ -1,5 +1,5 @@
 import express from 'express';
-import jwt from 'jsonwebtoken';
+// import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import _ from 'lodash';
 
@@ -14,7 +14,9 @@ const routes = express.Router();
 routes.get('/me', auth, wrapAsync(async (req, res) => {
   //Need JWT user in req
   const alunos = await req.orm.query(
-    `SELECT login FROM alunos WHERE login = '${req.user._id}'`,
+    `SELECT login
+    FROM ${req.orm.tabela.alunos} 
+    WHERE login = '${req.user._id}'`,
     { type: req.orm.QueryTypes.SELECT });
 
   res.send(alunos);
@@ -22,7 +24,8 @@ routes.get('/me', auth, wrapAsync(async (req, res) => {
 
 routes.get('/', auth, wrapAsync(async (req, res) => {
   const alunos = await req.orm.query(
-    `SELECT * FROM alunos`,
+    `SELECT * 
+    FROM ${req.orm.tabela.questoes}`,
     { type: req.orm.QueryTypes.SELECT }
   );
 

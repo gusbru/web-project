@@ -4,6 +4,20 @@ import orm from '../config/db';
 
 const initORM = (app) => {
 	// orm.Aluno = orm.models.alunos;
+
+	// Nome das tabelas
+	orm.tabela = {
+		alunos: 'alunos',
+		questoes: 'questoes',
+		alunosQuestoes: 'questoes_alunos',
+	};
+	
+	orm.chavePrimaria = {
+		alunos: 'login',
+		questoes: 'cod',
+		alunosQuestoes: 'cod'
+	};
+	
 	app.set('orm', orm);
 };
 
