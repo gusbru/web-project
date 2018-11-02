@@ -26,14 +26,14 @@ CREATE TABLE professores (
 );
 
 CREATE TABLE questoes (
-	codigo_questao INT,
+	codigo_questao INT AUTO_INCREMENT,
   enunciado VARCHAR(255),
-  respota_correta ENUM('A', 'B', 'C', 'D'),
+  resposta_correta ENUM('A', 'B', 'C', 'D'),
   PRIMARY KEY (codigo_questao)
 );
 
 CREATE TABLE alternativas (
-  codigo_alternativa INT,
+  codigo_alternativa INT AUTO_INCREMENT,
   codigo_questao INT,
   alternativa ENUM('A', 'B', 'C', 'D'),
   descricao VARCHAR(255),
