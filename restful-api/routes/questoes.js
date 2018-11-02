@@ -1,7 +1,10 @@
 import express from 'express';
 
 import auth from '../middlewares/auth';
+import isProfessor from '../middlewares/isProfessor';
 import wrapAsync from '../middlewares/wrapAsync';
+
+import validateQuestao from '../validations/questoes';
 
 const routes = express.Router();
 
@@ -17,7 +20,7 @@ routes.get('/', auth, wrapAsync(async (req, res) => {
   res.send(questoes);
 }));
 
-routes.get('/:login', auth, wrapAsync(async (req, res) => {
+routes.get('/:login', [auth, isProfessor], wrapAsync(async (req, res) => {
   const { login } = req.params;
   const { tabela, chavePrimaria } = req.orm;
 
@@ -30,6 +33,40 @@ routes.get('/:login', auth, wrapAsync(async (req, res) => {
   );
 
   res.send(questoes);
+}));
+
+routes.post('/', [auth, isProfessor], wrapAsync(async (req, res) => {
+  const { enunciado, resposta_correta, alternativas } = req.body;
+  const { tabela, chavePrimaria } = req.orm;
+
+  const opcoes = ['A', 'B', 'C', 'D'];
+
+  const { error } = validateQuestao(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const questao = await req.orm.query(
+    `INSERT INTO ${tabela.questoes}(enunciado, resposta_correta)
+    VALUES('${enunciado}', '${resposta_correta}')`,
+    { type: req.orm.QueryTypes.INSERT }
+  );
+
+  const codigoQuestao = questao[0];
+
+  /*
+  const insertAlternativas = aync () => {
+    alternativas.forEach((alternativa, index) => {
+      await req.orm.query(
+        `INSERT INTO ${tabela.alternativas}(codigo_questao, alternativa, descricao)
+        VALUES('${codigoQuestao}', '${opcoes[index]}', '${alternativa}')`
+      );
+      console.log(opcao);
+    });
+  };
+
+  insertAlternativas();
+  */
+
+  res.send(questao);
 }));
 
 export default routes;
