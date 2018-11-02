@@ -1,21 +1,25 @@
 import orm from '../config/db';
 
-// orm.import(`${__dirname}/../models/Aluno`);
-
 const initORM = (app) => {
-	// orm.Aluno = orm.models.alunos;
 
 	// Nome das tabelas
 	orm.tabela = {
+		usuarios: 'usuarios',
 		alunos: 'alunos',
+		professores: 'professores',
 		questoes: 'questoes',
-		alunosQuestoes: 'questoes_alunos',
+		alternativas: 'alternativas',
+		alunosQuestoes: 'alunos_questoes',
 	};
 	
+	// Chaves primárias
 	orm.chavePrimaria = {
-		alunos: 'login',
-		questoes: 'cod',
-		alunosQuestoes: 'cod'
+		usuarios: 'login',
+		alunos: 'codigo',
+		professores: 'codigo',
+		questoes: 'codigo_questao',
+		alternativas: 'codigo_alternativa',
+		alunosQuestoes: 'codigo_alunos_questoes'
 	};
 	
 	app.set('orm', orm);
