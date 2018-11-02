@@ -3,10 +3,9 @@ CREATE DATABASE webproject;
 use webproject;
 
 CREATE TABLE usuarios (
-  login VARCHAR(255) NOT NULL,
-  nome VARCHAR(255), 
-  email VARCHAR(255) NOT NULL, 
+  login VARCHAR(255) NOT NULL,  
   senha VARCHAR(255) NOT NULL, 
+  nome VARCHAR(255), 
   PRIMARY KEY (login)
 );
 
