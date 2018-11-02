@@ -1,3 +1,3 @@
 import jwt from 'jsonwebtoken';
 
-export default (login) => (jwt.sign({ _id: login }, 'privateKey'));
+export default (login, isProfessor = false) => (jwt.sign({ _id: login, isProfessor: isProfessor }, 'privateKey'));

@@ -6,6 +6,8 @@ import bodyParser from 'body-parser';
 
 import auth from './routes/auth';
 import usuarios from './routes/usuarios';
+import alunos from './routes/alunos';
+import professores from './routes/professores';
 import questoes from './routes/questoes';
 import questoesAlunos from './routes/questoesAlunos';
 import error from './middlewares/error';	
@@ -22,6 +24,8 @@ app.use('/', initializer(app));
 app.use(bodyParser.json());
 
 app.use('/api/usuarios', usuarios);
+app.use('/api/alunos', alunos);
+app.use('/api/professores', professores);
 app.use('/api/questoes', questoes);
 app.use('/api/questoes/alunos', questoesAlunos);
 app.use('/api/auth', auth);

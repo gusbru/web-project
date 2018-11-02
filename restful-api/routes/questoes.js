@@ -20,15 +20,15 @@ routes.get('/', auth, wrapAsync(async (req, res) => {
 }));
 
 routes.get('/me', auth, wrapAsync(async (req, res) => {
-  const { tabela } = req.orm;
+  const { tabela, chavePrimaria } = req.orm;
 
   const questoes = await req.orm.query(
-    `SELECT * 
+    `SELECT enunciado 
     FROM ${tabela.questoes} 
-    WHERE cod IN (
-      SELECT codq 
+    WHERE ${chavePrimaria.questoes} IN (
+      SELECT ${chavePrimaria.alunosQuestoes} 
       FROM ${tabela.alunosQuestoes} 
-      WHERE codl = '${req.user._id}'
+      WHERE ${chavePrimaria.usuarios} = '${req.user._id}'
     )`,
     { type: req.orm.QueryTypes.SELECT }
   );
