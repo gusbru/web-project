@@ -9,7 +9,7 @@ import usuarios from './routes/usuarios';
 import alunos from './routes/alunos';
 import professores from './routes/professores';
 import questoes from './routes/questoes';
-import questoesAlunos from './routes/questoesAlunos';
+import me from './routes/me';
 import error from './middlewares/error';	
 
 // const port = process.env.PORT || 3000;
@@ -27,7 +27,7 @@ app.use('/api/usuarios', usuarios);
 app.use('/api/alunos', alunos);
 app.use('/api/professores', professores);
 app.use('/api/questoes', questoes);
-app.use('/api/questoes/alunos', questoesAlunos);
+app.use('/api/me', me);
 app.use('/api/auth', auth);
 
 app.use(error);

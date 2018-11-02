@@ -7,19 +7,6 @@ import wrapAsync from '../middlewares/wrapAsync';
 
 const routes = express.Router();
 
-routes.get('/me', auth, wrapAsync(async (req, res) => {
-  const { tabela } = req.orm;
-
-  const usuario = await req.orm.query(
-    `SELECT login
-    FROM ${tabela.usuarios} 
-    WHERE login = '${req.user._id}'`,
-    { type: req.orm.QueryTypes.SELECT }
-  );
-
-  res.send(usuario);
-}));
-
 routes.get('/', auth, wrapAsync(async (req, res) => {
   const { tabela } = req.orm;
 
