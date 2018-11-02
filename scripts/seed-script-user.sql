@@ -13,6 +13,6 @@ INSERT INTO professores (login, area_de_formacao) VALUES ('erick', 'API');
 INSERT INTO alunos(login, coeficiente_rendimento) VALUES ('maligno', 10);
 INSERT INTO alunos(login, coeficiente_rendimento) VALUES ('silvia', 10);
 
-INSERT INTO alunos_questoes(login, codigo_questao) VALUES ('maligno', 1);
-INSERT INTO alunos_questoes(login, codigo_questao) VALUES ('silvia', 1);
-INSERT INTO alunos_questoes(login, codigo_questao) VALUES ('maligno', 2);
+INSERT INTO alunos_questoes(login, codigo_questao, resposta) VALUES ('maligno', 1, 'A');
+INSERT INTO alunos_questoes(login, codigo_questao, resposta) VALUES ('silvia', 1, 'B');
+INSERT INTO alunos_questoes(login, codigo_questao, resposta) VALUES ('maligno', 2, 'D');

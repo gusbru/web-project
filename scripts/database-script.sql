@@ -45,6 +45,7 @@ CREATE TABLE alunos_questoes (
   codigo_alunos_questoes INT AUTO_INCREMENT,
 	login  VARCHAR(255),
 	codigo_questao INT,
+  resposta ENUM('A', 'B', 'C', 'D'),
   PRIMARY KEY (codigo_alunos_questoes),
   FOREIGN KEY (login) REFERENCES usuarios(login),
   FOREIGN KEY (codigo_questao) REFERENCES questoes(codigo_questao)
