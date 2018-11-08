@@ -3,9 +3,7 @@ import './index.css';
  
 const person = (props) => {
   return (
-    <div className="input">
-      {props.inputTitle}: <input type="text" name="FirstName" value="Mickey" />
-    </div>
+    <input type="text" name="FirstName" value="" placeHolder={props.inputTitle} />
   )
 }
 export default person;
