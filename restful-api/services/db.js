@@ -22,6 +22,9 @@ const initORM = (app) => {
 		alunosQuestoes: 'codigo_alunos_questoes'
 	};
 	
+	// Alternativas
+	orm.opcoesAlternativas =  ['A', 'B', 'C', 'D'];
+
 	app.set('orm', orm);
 };
 

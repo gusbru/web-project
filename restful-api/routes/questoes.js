@@ -8,6 +8,13 @@ import validateQuestao from '../validations/questoes';
 
 const routes = express.Router();
 
+routes.param(['codigoQuestao'], (req, res, next, value) => {
+  if(!parseInt(value, 10)) {
+    res.status(404).send({ error: 'Algo falhou'})
+  }
+  return next();
+});
+
 routes.get('/', auth, wrapAsync(async (req, res) => {
   const { tabela } = req.orm;
 
@@ -37,9 +44,7 @@ routes.get('/:login', [auth, isProfessor], wrapAsync(async (req, res) => {
 
 routes.post('/', [auth, isProfessor], wrapAsync(async (req, res) => {
   const { enunciado, resposta_correta, alternativas } = req.body;
-  const { tabela, chavePrimaria } = req.orm;
-
-  const opcoes = ['A', 'B', 'C', 'D'];
+  const { tabela, chavePrimaria, opcoesAlternativas } = req.orm;
 
   const { error } = validateQuestao(req.body);
   if (error) return res.status(400).send(error.details[0].message);
@@ -55,11 +60,67 @@ routes.post('/', [auth, isProfessor], wrapAsync(async (req, res) => {
   alternativas.forEach((alternativa, index) => {
     req.orm.query(
       `INSERT INTO ${tabela.alternativas}(codigo_questao, alternativa, descricao)
-      VALUES('${codigoQuestao}', '${opcoes[index]}', '${alternativa}')`
+      VALUES('${codigoQuestao}', '${opcoesAlternativas[index]}', '${alternativa}')`
     );
   });
 
-  res.send({ enunciado, alternativas });
+  const questaoInserida = await req.orm.query(
+    `SELECT * FROM ${tabela.questoes}
+    WHERE codigo_questao = ${codigoQuestao}`,
+    { type: req.orm.QueryTypes.SELECT }
+  );
+
+  res.send(questaoInserida);
+}));
+
+routes.put('/:codigoQuestao', [auth, isProfessor], wrapAsync(async (req, res) => {
+  const { codigoQuestao } = req.params;
+  const { enunciado, resposta_correta } = req.body;
+  const { tabela } = req.orm;
+
+  const questaoAtual = await req.orm.query(
+    `SELECT * FROM ${tabela.questoes}
+    WHERE codigo_questao = ${codigoQuestao}`,
+    { type: req.orm.QueryTypes.SELECT }
+  );
+  
+  const novoEnunciado = (typeof enunciado === 'undefined') ? questaoAtual[0].enunciado : enunciado;
+  const novaResposta = (typeof resposta_correta === 'undefined') ? questaoAtual[0].resposta_correta : resposta_correta;
+
+  let questaoAtualizada = await req.orm.query(
+    `UPDATE ${tabela.questoes}
+    SET enunciado = '${novoEnunciado}',
+    resposta_correta = '${novaResposta}'
+    WHERE codigo_questao = ${codigoQuestao}`,
+    { type: req.orm.QueryTypes.UPDATE }
+  );
+
+  questaoAtualizada = await req.orm.query(
+    `SELECT * FROM ${tabela.questoes}
+    WHERE codigo_questao = ${codigoQuestao}`,
+    { type: req.orm.QueryTypes.SELECT }
+  );
+
+  res.send(questaoAtualizada);
+}));
+
+routes.delete('/:codigoQuestao', [auth, isProfessor], wrapAsync(async (req, res) => {
+  const { codigoQuestao } = req.params;
+  const { tabela } = req.orm;
+
+  const questao = await req.orm.query(
+    `SELECT * FROM ${tabela.questoes}
+    WHERE codigo_questao = ${codigoQuestao}`,
+    { type: req.orm.QueryTypes.SELECT }
+  );
+  
+  const questaoDeletada = await req.orm.query(
+    `DELETE FROM ${tabela.questoes}
+    WHERE codigo_questao = ${codigoQuestao}`,
+    { type: req.orm.QueryTypes.DELETE }
+  );
+
+  res.send(questao);
 }));
 
 export default routes;
