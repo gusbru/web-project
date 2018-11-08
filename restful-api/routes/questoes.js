@@ -52,21 +52,14 @@ routes.post('/', [auth, isProfessor], wrapAsync(async (req, res) => {
 
   const codigoQuestao = questao[0];
 
-  /*
-  const insertAlternativas = aync () => {
-    alternativas.forEach((alternativa, index) => {
-      await req.orm.query(
-        `INSERT INTO ${tabela.alternativas}(codigo_questao, alternativa, descricao)
-        VALUES('${codigoQuestao}', '${opcoes[index]}', '${alternativa}')`
-      );
-      console.log(opcao);
-    });
-  };
+  alternativas.forEach((alternativa, index) => {
+    req.orm.query(
+      `INSERT INTO ${tabela.alternativas}(codigo_questao, alternativa, descricao)
+      VALUES('${codigoQuestao}', '${opcoes[index]}', '${alternativa}')`
+    );
+  });
 
-  insertAlternativas();
-  */
-
-  res.send(questao);
+  res.send({ enunciado, alternativas });
 }));
 
 export default routes;

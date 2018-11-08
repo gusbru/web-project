@@ -5,10 +5,10 @@ export default (questao) => {
 		enunciado: Joi.string().min(3).required(),
 		resposta_correta: Joi.string().max(1).required(),
 		alternativas: Joi.array().length(4).items(
-			Joi.string().max(1).required(),
-			Joi.string().max(1).required(),
-			Joi.string().max(1).required(),
-			Joi.string().max(1).required()
+			Joi.string().min(1).required(),
+			Joi.string().min(1).required(),
+			Joi.string().min(1).required(),
+			Joi.string().min(1).required()
 		),
 	};
 
