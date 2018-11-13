@@ -3,6 +3,7 @@ package com.example.gusbru5.android_app;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -11,32 +12,68 @@ import java.util.regex.Pattern;
 
 public class Login extends AppCompatActivity {
 
+    // UI References
+    private Button btnLogin;
+    private TextView email;
+    private TextView password;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        email = findViewById(R.id.editTextEmail);
+        password = findViewById(R.id.editTextPassword);
+        btnLogin = (Button) findViewById(R.id.buttonEntrar);
+
+        // button listener
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                login();
+            }
+        });
+
+
     }
 
-    public void login(View view)
+    public void login()
     {
-        TextView email = findViewById(R.id.editTextEmail);
-        TextView password = findViewById(R.id.editTextPassword);
 
-        if (email.getText().toString().isEmpty() || password.getText().toString().isEmpty())
+
+        // Reset errors
+        email.setError(null);
+        password.setError(null);
+
+        if (email.getText().toString().isEmpty())
         {
             Toast.makeText(getApplicationContext(), "Insira o seu Email/Password", Toast.LENGTH_LONG).show();
+            email.setError("Insira o seu Email");
+            password.setText("");
+            email.requestFocus();
+            return;
         }
-        else if (!isEmailValid(email.getText().toString()))
+
+        if (password.getText().toString().isEmpty())
+        {
+            password.setError("Insira a senha");
+            password.requestFocus();
+            return;
+        }
+
+        if (!isEmailValid(email.getText().toString()))
         {
             Toast.makeText(getApplicationContext(), "Use um email válido", Toast.LENGTH_LONG).show();
+            email.setError("Email inválido");
+            email.requestFocus();
+            return;
         }
-        else
-        {
-            // tentar autenticar
 
-            // apagar o conteudo de password na tela
-            password.setText("");
-        }
+
+        // tentar autenticar
+        // apagar o conteudo de password na tela
+        password.setText("");
 
 
     }
