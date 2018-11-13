@@ -1,0 +1,11 @@
+androida-pp/*.iml
+androida-pp/.gradle
+androida-pp/local.properties
+androida-pp/.idea/caches/build_file_checksums.ser
+androida-pp/.idea/libraries
+androida-pp/.idea/modules.xml
+androida-pp/.idea/workspace.xml
+androida-pp/.DS_Store
+androida-pp/build
+androida-pp/captures
+androida-pp/.externalNativeBuild
