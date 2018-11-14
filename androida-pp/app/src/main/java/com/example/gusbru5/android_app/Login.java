@@ -1,12 +1,27 @@
 package com.example.gusbru5.android_app;
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,6 +31,9 @@ public class Login extends AppCompatActivity {
     private Button btnLogin;
     private TextView email;
     private TextView password;
+    private String urlAuth = "http://177.220.13.141:3005/api/auth";
+    private String token;
+
 
 
     @Override
@@ -25,7 +43,9 @@ public class Login extends AppCompatActivity {
 
         email = findViewById(R.id.editTextEmail);
         password = findViewById(R.id.editTextPassword);
-        btnLogin = (Button) findViewById(R.id.buttonEntrar);
+        btnLogin = findViewById(R.id.buttonEntrar);
+
+        email.requestFocus();
 
         // button listener
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -62,41 +82,104 @@ public class Login extends AppCompatActivity {
             return;
         }
 
-        if (!isEmailValid(email.getText().toString()))
-        {
-            Toast.makeText(getApplicationContext(), "Use um email válido", Toast.LENGTH_LONG).show();
-            email.setError("Email inválido");
-            email.requestFocus();
-            return;
-        }
-
 
         // tentar autenticar
+        SendJsonData sendJsonData = new SendJsonData();
+        sendJsonData.execute(urlAuth);
+
+
         // apagar o conteudo de password na tela
         password.setText("");
 
+    }
+
+    private class SendJsonData extends AsyncTask<String, Void, String>
+    {
+        @Override
+        protected void onPreExecute() {
+            Log.v("bla", "do before launch async");
+            token = "";
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+            Log.v("bla", "doing in background...");
+            try
+            {
+                token = HttpPost(urls[0]);
+            }
+            catch (Exception e)
+            {
+                Log.e("Login", e.getMessage());
+            }
+
+            return token;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            Log.v("bla", "do after async finished");
+            Log.v("bla", s);
+            if (!s.equals("Email ou senha inválido.") && !s.isEmpty())
+                goToSecondActivity();
+            else
+                Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private String HttpPost(String myUrl) throws IOException, JSONException
+    {
+
+        URL url = new URL(myUrl);
+
+        // 1. create the HttpURLConnection
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+
+        // 2. build JSON object
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.accumulate("login", email.getText().toString());
+        jsonObject.accumulate("senha", password.getText().toString());
+
+        // 3. add JSON content to POST request body
+        OutputStream os = connection.getOutputStream();
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+        writer.write(jsonObject.toString());
+        writer.flush();
+        writer.close();
+        os.close();
+
+        // 4. make POST request to the given URL and save the token
+        InputStream is = connection.getInputStream();
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder stringBuilder = new StringBuilder();
+        String output;
+        connection.connect();
+
+        while ((output = bufferedReader.readLine()) != null)
+            stringBuilder.append(output);
+
+        Log.v("bla", stringBuilder.toString());
+
+        bufferedReader.close();
+        is.close();
+
+//        return connection.getResponseMessage() + "";
+        return stringBuilder.toString();
 
     }
 
-    private boolean isEmailValid(String email)
+    private void goToSecondActivity()
     {
-        String regExpn =
-                "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
-                        +"((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
-                        +"[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\."
-                        +"([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
-                        +"[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
-                        +"([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$";
+        Bundle bundle = new Bundle();
+        bundle.putString("usuario", email.getText().toString());
+        bundle.putString("token", token);
 
-        CharSequence inputStr = email;
+        Intent intent = new Intent(this, SecondActivity.class);
+        intent.putExtras(bundle);
 
-        Pattern pattern = Pattern.compile(regExpn,Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(inputStr);
-
-        if(matcher.matches())
-            return true;
-        else
-            return false;
+        startActivity(intent);
     }
 
 }

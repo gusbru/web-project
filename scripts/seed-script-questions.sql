@@ -1,3 +1,4 @@
+use webproject;
 
 INSERT INTO questoes(enunciado, resposta_correta) VALUES ('Quanto é 1+1?', 'A');
 INSERT INTO questoes(enunciado, resposta_correta) VALUES ('Quanto é 1-1?', 'D');

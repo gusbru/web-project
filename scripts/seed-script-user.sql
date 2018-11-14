@@ -1,5 +1,7 @@
 /* The default password is: 'senha' */
 
+use webproject;
+
 INSERT INTO usuarios VALUES ('erick', '$2b$10$Cx769UtSqXzLnQ0tK/q.du8WL.SxsClFj4C7wJqb9OgSmIxDcG9lO', 'Erick');
 INSERT INTO usuarios VALUES ('thiago', '$2b$10$Cx769UtSqXzLnQ0tK/q.du8WL.SxsClFj4C7wJqb9OgSmIxDcG9lO', 'Thiago');
 INSERT INTO usuarios VALUES ('carlos', '$2b$10$Cx769UtSqXzLnQ0tK/q.du8WL.SxsClFj4C7wJqb9OgSmIxDcG9lO', 'Carlos');
