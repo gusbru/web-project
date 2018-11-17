@@ -1,0 +1,20 @@
+.option {
+  background-color: #F4F7F7;
+  cursor: pointer;
+  width: 50%;
+}
+
+.Letra {
+  text-align: center;
+  margin: 5px 10px;
+  border-radius: 4px;
+  padding-bottom: 5px;
+}
+
+p {
+  color: #282c34;
+  font-family: arial;
+  font-size: 16pt;
+  line-height: 0;
+  font-weight: 600;
+}

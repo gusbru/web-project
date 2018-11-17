@@ -1,6 +1,6 @@
 import React from 'react';
 
-import classes from './index.css';
+import './index.css';
 
 import Input from '../Input';
 import Button from '../Button';
