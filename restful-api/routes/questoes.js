@@ -15,7 +15,7 @@ routes.param(['codigoQuestao'], (req, res, next, value) => {
   return next();
 });
 
-routes.get('/', auth, wrapAsync(async (req, res) => {
+routes.get('/', wrapAsync(async (req, res) => {
   const { tabela } = req.orm;
 
   const questoes = await req.orm.query(
