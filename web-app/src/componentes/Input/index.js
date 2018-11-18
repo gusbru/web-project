@@ -4,7 +4,7 @@ import './index.css';
  
 const person = (props) => {
   return (
-    <input type="text" placeHolder={props.inputTitle} />
+    <input type="text" placeholder={props.inputTitle} />
   )
 }
 export default person;
