@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,17 +24,20 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Login extends AppCompatActivity {
 
     // UI References
     private Button btnLogin;
-    private TextView email;
-    private TextView password;
+    private TextView txtEmail;
+    private TextView txtPassword;
     private String urlAuth = "http://177.220.13.141:3005/api/auth";
     private String token;
+    private String user;
+    private String password;
+    private View progressBar;
+    private View mainPanel;
+    private Toolbar toolbar;
 
 
 
@@ -41,11 +46,16 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        email = findViewById(R.id.editTextEmail);
-        password = findViewById(R.id.editTextPassword);
+        txtEmail = findViewById(R.id.editTextEmail);
+        txtPassword = findViewById(R.id.editTextPassword);
         btnLogin = findViewById(R.id.buttonEntrar);
+        progressBar = findViewById(R.id.loadingPanel);
+        mainPanel = findViewById(R.id.mainPanel);
+        toolbar = findViewById(R.id.my_toolbar);
 
-        email.requestFocus();
+        setSupportActionBar(toolbar);
+
+        txtEmail.requestFocus();
 
         // button listener
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -63,22 +73,22 @@ public class Login extends AppCompatActivity {
 
 
         // Reset errors
-        email.setError(null);
-        password.setError(null);
+        txtEmail.setError(null);
+        txtPassword.setError(null);
 
-        if (email.getText().toString().isEmpty())
+        if (txtEmail.getText().toString().isEmpty())
         {
             Toast.makeText(getApplicationContext(), "Insira o seu Email/Password", Toast.LENGTH_LONG).show();
-            email.setError("Insira o seu Email");
-            password.setText("");
-            email.requestFocus();
+            txtEmail.setError("Insira o seu Email");
+            txtPassword.setText("");
+            txtEmail.requestFocus();
             return;
         }
 
-        if (password.getText().toString().isEmpty())
+        if (txtPassword.getText().toString().isEmpty())
         {
-            password.setError("Insira a senha");
-            password.requestFocus();
+            txtPassword.setError("Insira a senha");
+            txtPassword.requestFocus();
             return;
         }
 
@@ -88,17 +98,23 @@ public class Login extends AppCompatActivity {
         sendJsonData.execute(urlAuth);
 
 
-        // apagar o conteudo de password na tela
-        password.setText("");
-
     }
 
     private class SendJsonData extends AsyncTask<String, Void, String>
     {
+
         @Override
         protected void onPreExecute() {
             Log.v("bla", "do before launch async");
             token = "";
+            user = txtEmail.getText().toString();
+            password = txtPassword.getText().toString();
+
+            mainPanel.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
+
+            // apagar o conteudo de txtPassword na tela
+            txtPassword.setText("");
         }
 
         @Override
@@ -106,7 +122,7 @@ public class Login extends AppCompatActivity {
             Log.v("bla", "doing in background...");
             try
             {
-                token = HttpPost(urls[0]);
+                token = HttpPost(urls[0], user, password);
             }
             catch (Exception e)
             {
@@ -123,14 +139,20 @@ public class Login extends AppCompatActivity {
             if (!s.equals("Email ou senha inválido.") && !s.isEmpty())
                 goToSecondActivity();
             else
+            {
+                progressBar.setVisibility(View.INVISIBLE);
+                mainPanel.setVisibility(View.VISIBLE);
                 Toast.makeText(getApplicationContext(), "Error", Toast.LENGTH_LONG).show();
+            }
+
         }
     }
 
-    private String HttpPost(String myUrl) throws IOException, JSONException
+    private String HttpPost(String myUrl, String user, String password) throws IOException, JSONException
     {
 
         URL url = new URL(myUrl);
+
 
         // 1. create the HttpURLConnection
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -139,8 +161,8 @@ public class Login extends AppCompatActivity {
 
         // 2. build JSON object
         JSONObject jsonObject = new JSONObject();
-        jsonObject.accumulate("login", email.getText().toString());
-        jsonObject.accumulate("senha", password.getText().toString());
+        jsonObject.accumulate("login", user);
+        jsonObject.accumulate("senha", password);
 
         // 3. add JSON content to POST request body
         OutputStream os = connection.getOutputStream();
@@ -166,6 +188,8 @@ public class Login extends AppCompatActivity {
         is.close();
 
 //        return connection.getResponseMessage() + "";
+
+        // 5. return the authentication msg. Token if successfully or msg error
         return stringBuilder.toString();
 
     }
@@ -173,13 +197,14 @@ public class Login extends AppCompatActivity {
     private void goToSecondActivity()
     {
         Bundle bundle = new Bundle();
-        bundle.putString("usuario", email.getText().toString());
+        bundle.putString("usuario", user);
         bundle.putString("token", token);
 
         Intent intent = new Intent(this, SecondActivity.class);
         intent.putExtras(bundle);
 
         startActivity(intent);
+        finish();
     }
 
 }
