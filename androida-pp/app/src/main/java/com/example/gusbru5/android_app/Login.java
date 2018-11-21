@@ -1,6 +1,9 @@
 package com.example.gusbru5.android_app;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -39,8 +42,6 @@ public class Login extends AppCompatActivity {
     private View mainPanel;
     private Toolbar toolbar;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +58,7 @@ public class Login extends AppCompatActivity {
 
         txtEmail.requestFocus();
 
+
         // button listener
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,7 +66,6 @@ public class Login extends AppCompatActivity {
                 login();
             }
         });
-
 
     }
 
@@ -115,6 +116,7 @@ public class Login extends AppCompatActivity {
 
             // apagar o conteudo de txtPassword na tela
             txtPassword.setText("");
+
         }
 
         @Override
@@ -158,6 +160,7 @@ public class Login extends AppCompatActivity {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+        connection.setConnectTimeout(5000);
 
         // 2. build JSON object
         JSONObject jsonObject = new JSONObject();
@@ -196,6 +199,8 @@ public class Login extends AppCompatActivity {
 
     private void goToSecondActivity()
     {
+        writeToken();
+
         Bundle bundle = new Bundle();
         bundle.putString("usuario", user);
         bundle.putString("token", token);
@@ -205,6 +210,15 @@ public class Login extends AppCompatActivity {
 
         startActivity(intent);
         finish();
+    }
+
+    private void writeToken()
+    {
+        // write shared preferences
+        SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("token", token);
+        editor.apply();
     }
 
 }

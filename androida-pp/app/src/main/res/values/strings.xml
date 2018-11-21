@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Ambiente de Aprendizado</string>
+    <string name="preference_file_key">shared_preferences</string>
 </resources>
