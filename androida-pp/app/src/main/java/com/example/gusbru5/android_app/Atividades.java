@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -73,7 +74,17 @@ public class Atividades extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            textView.setText("Text: " + s);
+            JSONObject jsonObject = new JSONObject();
+            try
+            {
+                jsonObject.getJSONArray(s);
+                textView.setText("Text: " + jsonObject.toString());
+            }
+            catch (JSONException e)
+            {
+                textView.setText("Text: erro convertendo JSON");
+            }
+
         }
 
         @Override
@@ -92,7 +103,7 @@ public class Atividades extends AppCompatActivity {
         }
     }
 
-    private String HttpGet() throws IOException, JSONException
+    private String HttpGet() throws IOException
     {
         URL url = new URL("http://177.220.13.141:3005/api/me/questoes");
 
