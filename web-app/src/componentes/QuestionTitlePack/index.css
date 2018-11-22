@@ -1,0 +1,15 @@
+.box {
+  box-sizing: border-box;
+  width: 260px;
+  margin: auto;
+  box-shadow: 2px 2px 5px 1px rgba(0, 0, 0, 0.2);
+  padding-bottom: 40px;
+  border-radius: 3px;
+  padding: 30px;
+  background-color: white;
+  text-align: center;
+}
+
+.title {
+  color: black;
+}

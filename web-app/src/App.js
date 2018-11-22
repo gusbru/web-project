@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import request from 'superagent';
 
-// import Home from './containers/Home';
-import Questions from './containers/Questions';
+import AllQuestions from './containers/AllQuestions';
+// import Questions from './containers/Questions';
 
 import './App.css';
 
@@ -17,7 +17,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Questions />
+        <AllQuestions />
       </div>
     );
   }
