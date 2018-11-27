@@ -3,15 +3,19 @@ package com.example.gusbru5.android_app;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class Question extends AppCompatActivity {
 
@@ -20,6 +24,9 @@ public class Question extends AppCompatActivity {
     private RadioGroup radioAlternativas;
     private RadioButton alternativaA, alternativaB, alternativaC, alternativaD, alternativaE;
     private Button btnNext;
+    private int currentQuestion;
+    private JSONArray questoes;
+    private ArrayList<String> respostas;
 
 
     @Override
@@ -39,9 +46,9 @@ public class Question extends AppCompatActivity {
         alternativaE = findViewById(R.id.alternativaE);
         btnNext = findViewById(R.id.btnNext);
 
-        int currentQuestion = intent.getIntExtra("questaoId", 0);
+        currentQuestion = intent.getIntExtra("questaoId", 0);
+        respostas = intent.getStringArrayListExtra("respostas");
 
-        JSONArray questoes;
         try
         {
             questoes = new JSONArray(intent.getStringExtra("questoes"));
@@ -67,11 +74,77 @@ public class Question extends AppCompatActivity {
         }
         catch (JSONException e)
         {
-
+            questoes = new JSONArray();
         }
 
 
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int alternativa = radioAlternativas.getCheckedRadioButtonId();
+                String resposta = idToLetter(alternativa);
+                if (resposta.isEmpty())
+                {
+                    Toast.makeText(getApplicationContext(),"Selecione uma Resposta",Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    respostas.add(currentQuestion, resposta);
+                    if (currentQuestion+1 == questoes.length())
+                    {
+                        // go to review activity
+                        goToReview();
+                    }
+                    else
+                    {
+                        // go to next question
+                        goToNextQuestion();
+                    }
+                }
 
 
+            }
+        });
+
+
+    }
+
+
+    private String idToLetter(int id)
+    {
+        if (id == alternativaA.getId())
+            return "A";
+        else if (id == alternativaB.getId())
+            return "B";
+        else if (id == alternativaC.getId())
+            return "C";
+        else if (id == alternativaD.getId())
+            return "D";
+        else if (id == alternativaE.getId())
+            return "E";
+        else
+            return "";
+
+    }
+
+    private void goToNextQuestion()
+    {
+        Bundle bundle = new Bundle();
+        bundle.putInt("questaoId", currentQuestion+1);
+        bundle.putString("questoes", questoes.toString());
+        bundle.putStringArrayList("respostas", respostas);
+        Intent intent = new Intent(this, Question.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    private void goToReview()
+    {
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList("respostas", respostas);
+        Intent intent = new Intent(this, Review.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+        finish();
     }
 }

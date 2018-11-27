@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 
 public class Atividades extends AppCompatActivity {
@@ -180,6 +181,8 @@ public class Atividades extends AppCompatActivity {
         Bundle bundle = new Bundle();
         bundle.putInt("questaoId", questionNumber);
         bundle.putString("questoes", questions.toString());
+        ArrayList<String> respostas = new ArrayList<>(questions.length());
+        bundle.putStringArrayList("respostas", respostas);
         Intent intent = new Intent(this, Question.class);
         intent.putExtras(bundle);
         startActivity(intent);
