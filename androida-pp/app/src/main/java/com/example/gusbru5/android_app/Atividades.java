@@ -91,9 +91,11 @@ public class Atividades extends AppCompatActivity {
                     btnAtividade2.setEnabled(false);
                     Toast.makeText(getApplicationContext(), "No questions :(", Toast.LENGTH_LONG).show();
                 }
-
-                textView.setText("we have: " + questions.length() + " questions");
-                goToQuestions(questions);
+                else
+                {
+                    textView.setText("we have: " + questions.length() + " questions");
+                    goToQuestions(questions, 0);
+                }
             }
             catch (JSONException e)
             {
@@ -173,8 +175,14 @@ public class Atividades extends AppCompatActivity {
         return true;
     }
 
-    private void goToQuestions(JSONArray questions)
+    private void goToQuestions(JSONArray questions, int questionNumber)
     {
-
+        Bundle bundle = new Bundle();
+        bundle.putInt("questaoId", questionNumber);
+        bundle.putString("questoes", questions.toString());
+        Intent intent = new Intent(this, Question.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+        finish();
     }
 }
