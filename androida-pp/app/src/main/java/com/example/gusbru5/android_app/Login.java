@@ -34,7 +34,7 @@ public class Login extends AppCompatActivity {
     private Button btnLogin;
     private TextView txtEmail;
     private TextView txtPassword;
-    private String urlAuth = "http://177.220.13.141:3005/api/auth";
+    private String urlAuth = "http://192.168.0.35:3005/api/auth";
     private String token;
     private String user;
     private String password;

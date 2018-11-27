@@ -1,9 +1,14 @@
 package com.example.gusbru5.android_app;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -11,7 +16,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -68,21 +75,30 @@ public class Atividades extends AppCompatActivity {
     {
         @Override
         protected void onPreExecute() {
-            textView.setText("onPreExecute");
+            textView.setText("Buscando Questoes");
 
         }
 
         @Override
         protected void onPostExecute(String s) {
-            JSONObject jsonObject = new JSONObject();
+            JSONObject jsonObject;
             try
             {
-                jsonObject.getJSONArray(s);
-                textView.setText("Text: " + jsonObject.toString());
+                jsonObject = new JSONObject(s);
+                JSONArray questions = jsonObject.getJSONArray("questions");
+                if (questions.length() == 0)
+                {
+                    btnAtividade2.setEnabled(false);
+                    Toast.makeText(getApplicationContext(), "No questions :(", Toast.LENGTH_LONG).show();
+                }
+
+                textView.setText("we have: " + questions.length() + " questions");
+                goToQuestions(questions);
             }
             catch (JSONException e)
             {
                 textView.setText("Text: erro convertendo JSON");
+                Log.e("JSON", e.getMessage());
             }
 
         }
@@ -96,8 +112,9 @@ public class Atividades extends AppCompatActivity {
             }
             catch (Exception e)
             {
-
+                Log.e("QUESTION", e.getMessage());
             }
+            Log.v("QUESTION", questions);
 
             return questions;
         }
@@ -105,7 +122,7 @@ public class Atividades extends AppCompatActivity {
 
     private String HttpGet() throws IOException
     {
-        URL url = new URL("http://177.220.13.141:3005/api/me/questoes");
+        URL url = new URL("http://192.168.0.35:3005/api/me/questoes");
 
         // 1. create http connection
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -123,9 +140,16 @@ public class Atividades extends AppCompatActivity {
             BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             StringBuilder sb = new StringBuilder();
             String line;
+
+            line = "{ \"questions\": ";
+            sb.append(line);
+
             while ((line = br.readLine()) != null) {
-                sb.append(line+"\n");
+                sb.append(line).append("\n");
             }
+
+            sb.append("}");
+
             br.close();
 
             return sb.toString();
@@ -147,5 +171,10 @@ public class Atividades extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    private void goToQuestions(JSONArray questions)
+    {
+
     }
 }
