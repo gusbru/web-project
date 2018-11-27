@@ -125,7 +125,10 @@ public class Atividades extends AppCompatActivity {
 
     private String HttpGet() throws IOException
     {
-        URL url = new URL("http://192.168.0.35:3005/api/me/questoes");
+        SharedPreferences sharedPreferences = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        String ip = sharedPreferences.getString("ip", "");
+        String port = sharedPreferences.getString("port", "");
+        URL url = new URL("http://" + ip + ":" + port + "/api/me/questoes");
 
         // 1. create http connection
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();

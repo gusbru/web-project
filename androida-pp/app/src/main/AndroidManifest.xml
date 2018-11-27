@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.gusbru5.android_app">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -11,8 +12,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".Login">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".Login"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,8 +24,15 @@
         </activity>
         <activity android:name=".SecondActivity" />
         <activity android:name=".Atividades" />
-        <activity android:name=".Question"></activity>
-        <activity android:name=".Review"></activity>
+        <activity android:name=".Question" />
+        <activity android:name=".Review" />
+        <activity
+            android:name=".Settings"
+            android:parentActivityName=".Login">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Login"/>
+        </activity>
     </application>
 
 </manifest>

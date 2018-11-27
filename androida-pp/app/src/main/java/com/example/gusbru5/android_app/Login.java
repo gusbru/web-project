@@ -9,6 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -34,13 +37,15 @@ public class Login extends AppCompatActivity {
     private Button btnLogin;
     private TextView txtEmail;
     private TextView txtPassword;
-    private String urlAuth = "http://192.168.0.35:3005/api/auth";
+    private String urlAuth;
     private String token;
     private String user;
     private String password;
+    private String ipAPI, portAPI;
     private View progressBar;
     private View mainPanel;
     private Toolbar toolbar;
+    private SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +63,6 @@ public class Login extends AppCompatActivity {
 
         txtEmail.requestFocus();
 
-
         // button listener
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +71,30 @@ public class Login extends AppCompatActivity {
             }
         });
 
+        sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        ipAPI = sharedPref.getString("ip", "");
+        portAPI = sharedPref.getString("port", "");
+        urlAuth = "http://" + ipAPI + ":" + portAPI + "/api/auth";
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.settings, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings)
+        {
+            Intent intent = new Intent(this, Settings.class);
+            startActivity(intent);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void login()
@@ -215,7 +243,6 @@ public class Login extends AppCompatActivity {
     private void writeToken()
     {
         // write shared preferences
-        SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("token", token);
         editor.apply();
