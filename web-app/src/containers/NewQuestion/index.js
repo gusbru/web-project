@@ -1,12 +1,18 @@
 import React from "react";
 import { withRouter, Redirect } from "react-router-dom";
 import request from 'superagent';
+import Snackbar from '@material-ui/core/Snackbar';
 
 class NewQuestion extends React.Component {
 
     state = {
         selectedOption: "",
-        enunciado: ""
+        enunciado: "",
+        alternativaA: "",
+        alternativaB: "",
+        alternativaC: "",
+        alternativaD: "",
+        open: false,
     }
 
     handleOptionChange = (changeEvent) => {
@@ -21,21 +27,44 @@ class NewQuestion extends React.Component {
         });
     }
 
+    handleClick = () => {
+        this.setState({ open: true });
+    };
+
+    handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        this.setState({ open: false });
+      };
+
     handleFormSubmit = (formSubmitEvent) => {
         formSubmitEvent.preventDefault();
+        console.log(formSubmitEvent.target.id);
         request
             .post('http://localhost:3005/api/questoes')
             .set({
                 "x-auth-token" :localStorage.getItem("token"),
-                'Content-Type':'application/json', 
-                Accept: '*/*'
+                'Content-Type':'application/json'
             })
             .send({ 
                 "enunciado": this.state.enunciado,
 	            "resposta_correta": this.state.selectedOption,
 	            "alternativas" : ["A", "B", "C", "D"]
             })
-            .then(res => console.log(res))
+            .then(res => {
+                console.log(res);
+                this.setState({
+                    open: true,
+                    selectedOption: "",
+                    enunciado: "",
+                    alternativaA: "",
+                    alternativaB: "",
+                    alternativaC: "",
+                    alternativaD: "",
+                });
+            })
             .catch(err => console.log(err));
         console.log('You have selected:', this.state.selectedOption, this.state.enunciado, localStorage.getItem("token"));
     }
@@ -74,8 +103,21 @@ class NewQuestion extends React.Component {
                     <label htmlFor="D">D</label>
                     <input id="D" name="D" type="radio" value={"D"} onChange={this.handleOptionChange} checked={this.state.selectedOption === 'D'} style={{margin: "10px"}} />
                     <br/>
-                    <input id="submitNovaQuestao" name="submitNovaQuestao" type="submit" value="Adicionar" style={{backgroundColor: "grey", color:"white", fontSize:"20px", marginTop:"40px", width:"50%"}} />
+                    <input id="submitNovaQuestao" name="submitNovaQuestao" type="submit" value="Adicionar" style={{backgroundColor: "grey", color:"white", fontSize:"20px", marginTop:"40px", width:"40%"}} />
                 </form>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={this.state.open}
+                    autoHideDuration={6000}
+                    onClose={this.handleClose}
+                    ContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span id="message-id">Questao Inserida</span>}
+                />
             </div>
         );
     }

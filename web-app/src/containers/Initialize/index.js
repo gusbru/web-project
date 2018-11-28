@@ -12,17 +12,24 @@ class Initialize extends React.Component {
     }
 
     
-
     componentDidMount() {
         console.log("initial token = ", this.state.token);
-        // request
-        //     .get('http://localhost:3005/api/me')
-        //     .set({ 'x-auth-token': this.state.token})
-        //     .then(res => console.log("deu certo", res))
-        //     .catch(err => {
-        //         console.log("erro =>", err);
-        //         localStorage.setItem("token", "");
-        //     })
+        let username = "";
+        request
+            .get('http://localhost:3005/api/me')
+            .set({ 'x-auth-token': this.state.token})
+            .then(res => {
+                username = res.body[0].login;
+                localStorage.setItem("username", username);
+            })    
+            .catch(err => {
+                console.log("erro =>", err);
+                localStorage.setItem("token", "");
+                localStorage.setItem("username", "");
+            });
+            this.setState({
+                username: username
+            });
     }
 
     render() {

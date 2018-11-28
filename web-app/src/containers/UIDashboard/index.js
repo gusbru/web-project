@@ -217,6 +217,9 @@ class UIDashboard extends React.Component {
           {this.state.open &&
             <div className={classes.username}>
               <p>Bem vindo</p>
+              <p>
+                {localStorage.getItem("username") ? localStorage.getItem("username").toUpperCase() : ""}
+              </p>
             </div>
           }
           <Divider />
