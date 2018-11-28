@@ -22,6 +22,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import LayersIcon from '@material-ui/icons/Layers';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListSubheader from '@material-ui/core/ListSubheader';
 
 
 import { mainListItems, secondaryListItems } from '../../componentes/UIlistItems';
@@ -104,13 +105,17 @@ const styles = theme => ({
   h5: {
     marginBottom: theme.spacing.unit * 2,
   },
+  username: {
+    textAlign: "center"
+  }
 });
 
 class UIDashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      authenticated: this.props.authenticated,
+      authenticated: this.props.location.state.authenticated,
+      username: this.props.location.state.username,
       open: true,
       questionsInformations: [],
     };
@@ -211,6 +216,12 @@ class UIDashboard extends React.Component {
               <ChevronLeftIcon />
             </IconButton>
           </div>
+          {this.state.open &&
+            <div className={classes.username}>
+              <p>Bem vindo</p>
+              <p>{this.state.username.toUpperCase()}</p>
+            </div>
+          }
           <Divider />
           <List>
             {mainListItems.map(item =>
@@ -226,7 +237,17 @@ class UIDashboard extends React.Component {
           </List>
           <Divider />
           <List>
-            {secondaryListItems}
+            <ListSubheader inset>Saved reports</ListSubheader>
+            {secondaryListItems.map(item =>
+              <div key={item.key}>
+              <ListItem button onClick={() => this.handleDrawerClick(item.key)}>
+                <ListItemIcon>
+                  {item.type}
+                </ListItemIcon>
+                <ListItemText primary={item.text}/>
+              </ListItem>
+              </div>
+            )}
           </List>
         </Drawer>
         <main className={classes.content}>

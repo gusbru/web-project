@@ -78,6 +78,7 @@ class UILogin extends Component {
             authenticated: true
           });
           localStorage.setItem("token", res.text);
+          localStorage.setItem("username", this.state.username)
         })
       .catch(err => {
           console.log("Erro = :", err)
@@ -99,6 +100,7 @@ class UILogin extends Component {
             pathname: "/main",
             state: {
               authenticated: true,
+              username: this.state.username
             }
           }} />
       );
