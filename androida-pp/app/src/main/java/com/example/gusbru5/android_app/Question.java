@@ -94,11 +94,13 @@ public class Question extends AppCompatActivity {
                     {
                         // go to review activity
                         goToReview();
+                        finish();
                     }
                     else
                     {
                         // go to next question
                         goToNextQuestion();
+                        finish();
                     }
                 }
 
