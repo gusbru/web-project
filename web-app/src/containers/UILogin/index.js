@@ -94,7 +94,13 @@ class UILogin extends Component {
 
     if (this.state.authenticated) {
       return(
-        <Redirect to="/main" />
+        <Redirect 
+          to={{
+            pathname: "/main",
+            state: {
+              authenticated: true,
+            }
+          }} />
       );
     }
 

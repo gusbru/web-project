@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import request from 'superagent';
+import { withRouter, Redirect } from "react-router-dom";
 
 import { withStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -16,6 +17,12 @@ import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
+
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import LayersIcon from '@material-ui/icons/Layers';
+import ListItemText from '@material-ui/core/ListItemText';
+
 
 import { mainListItems, secondaryListItems } from '../../componentes/UIlistItems';
 import UISimpleTable from '../../componentes/UISimpleTable';
@@ -100,16 +107,22 @@ const styles = theme => ({
 });
 
 class UIDashboard extends React.Component {
-  state = {
-    open: true,
-    questionsInformations: [],
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      authenticated: this.props.authenticated,
+      open: true,
+      questionsInformations: [],
+    };
+  }
+  
 
   componentDidMount() {
     request
     .get('http://localhost:3005/api/questoes')
     .then(res => this.setState({questionsInformations: res.body}))
     .catch(err => console.log(err));
+
   };
 
   handleDrawerOpen = () => {
@@ -120,9 +133,36 @@ class UIDashboard extends React.Component {
     this.setState({ open: false });
   };
 
+  handleDrawerClick = (event) => {
+    console.log("drawer clicked", event);
+    if (event === "Sair") {
+      localStorage.setItem("token", "");
+      this.setState({
+        authenticated: false
+      });
+    }
+  }
+
+  checkAuthenticated = () => {
+    const token = localStorage.getItem("token");
+    if (token === null || token === "") {
+      this.setState({
+        authenticated: false
+      })
+    } else {
+      this.setState({
+        authenticated: true
+      })
+    }
+  }
+
   render() {
     const { classes } = this.props;
     const { questionsInformations } = this.state;
+
+    if (this.state.authenticated === false) {
+      return(<Redirect to="/" />);
+    }
 
     return (
       <div className={classes.root}>
@@ -172,9 +212,22 @@ class UIDashboard extends React.Component {
             </IconButton>
           </div>
           <Divider />
-          <List>{mainListItems}</List>
+          <List>
+            {mainListItems.map(item =>
+              <div key={item.key}>
+              <ListItem button onClick={() => this.handleDrawerClick(item.key)}>
+                <ListItemIcon>
+                  {item.type}
+                </ListItemIcon>
+                <ListItemText primary={item.text}/>
+              </ListItem>
+              </div>
+            )}
+          </List>
           <Divider />
-          <List>{secondaryListItems}</List>
+          <List>
+            {secondaryListItems}
+          </List>
         </Drawer>
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
@@ -196,4 +249,4 @@ UIDashboard.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(UIDashboard);
+export default withStyles(styles)(withRouter(UIDashboard));
