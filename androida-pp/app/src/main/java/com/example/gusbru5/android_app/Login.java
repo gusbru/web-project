@@ -76,6 +76,14 @@ public class Login extends AppCompatActivity {
         portAPI = sharedPref.getString("port", "");
         urlAuth = "http://" + ipAPI + ":" + portAPI + "/api/auth";
 
+        // check for token
+        token = sharedPref.getString("token", "");
+        user = sharedPref.getString("user", "");
+        if (token != null && !token.isEmpty())
+        {
+            goToSecondActivity();
+        }
+
     }
 
     @Override
@@ -245,6 +253,7 @@ public class Login extends AppCompatActivity {
         // write shared preferences
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("token", token);
+        editor.putString("user", user);
         editor.apply();
     }
 
