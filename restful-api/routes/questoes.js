@@ -17,14 +17,45 @@ routes.param(['codigoQuestao'], (req, res, next, value) => {
 
 routes.get('/', wrapAsync(async (req, res) => {
   const { tabela } = req.orm;
+  let codigoQuestoes = [];
+  let questoesFinal = [];
 
-  const questoes = await req.orm.query(
-    `SELECT * 
-    FROM ${tabela.questoes}`,
+  let questoes = await req.orm.query(
+    `SELECT ${tabela.questoes}.codigo_questao,
+      enunciado, 
+      codigo_alternativa, 
+      alternativa, 
+      descricao, 
+      resposta_correta
+    FROM ${tabela.alternativas} INNER JOIN ${tabela.questoes}
+    ON ${tabela.alternativas}.codigo_questao = ${tabela.questoes}.codigo_questao
+    ORDER BY ${tabela.questoes}.codigo_questao`,
     { type: req.orm.QueryTypes.SELECT }
   );
 
-  res.send(questoes);
+  questoes.forEach((questao) => {
+    const {
+      codigo_questao,
+      enunciado,
+      resposta_correta, 
+      alternativa, 
+      descricao
+    } = questao;
+
+    let indexQuestao = codigoQuestoes.indexOf(questao.codigo_questao);
+    let newQuestao;
+
+    if (indexQuestao === -1) {
+      codigoQuestoes.push(codigo_questao);
+      newQuestao = { codigo_questao, enunciado, resposta_correta };
+      newQuestao[`${alternativa}`] = descricao;
+      questoesFinal.push(newQuestao);
+    } else {
+      questoesFinal[codigoQuestoes.length - 1][`${alternativa}`] = descricao;
+    }
+  });
+
+  res.send(questoesFinal);
 }));
 
 routes.get('/:login', [auth, isProfessor], wrapAsync(async (req, res) => {
