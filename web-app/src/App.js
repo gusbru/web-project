@@ -4,6 +4,7 @@ import request from 'superagent';
 import './App.css';
 
 import UIDashboard from './containers/UIDashboard';
+import Home from './containers/Home';
 
 class App extends Component {
   componentDidMount() {
@@ -16,7 +17,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <UIDashboard />
+        {/* <UIDashboard /> */}
       </div>
     );
   }

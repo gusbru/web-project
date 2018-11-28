@@ -9,6 +9,8 @@ import LockIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
+import { withRouter, Redirect } from "react-router-dom";
+import request from 'superagent';
 
 const styles = theme => ({
   main: {
@@ -47,12 +49,54 @@ class UILogin extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      username: "",
+      password: "",
+      authenticated: false,
       questionsInformations: [{}],  
     };
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange = prop => event => {
+    this.setState({
+      [prop]: event.target.value
+    });
+  };
+
+  handleSubmit(event) {
+    event.preventDefault();
+    console.log('usuario: ', this.state.username);
+    console.log('senha: ', this.state.password);
+    request
+      .post('http://localhost:3005/api/auth')
+      .set('Content-Type', 'application/json')
+      .send({ "login": this.state.username, "senha": this.state.password})
+      .then(res => {
+          console.log("token:",res.text)
+          this.setState({
+            token: res.text,
+            authenticated: true
+          });
+          localStorage.setItem("token", res.text);
+        })
+      .catch(err => {
+          console.log("Erro = :", err)
+          alert("Usuario e/ou senha invalidos");
+          this.setState({
+            password: ""
+          })
+        }
+      );
   }
   
   render () {
     const { classes } = this.props;
+
+    if (this.state.authenticated) {
+      return(
+        <Redirect to="/main" />
+      );
+    }
 
     return (
       <main className={classes.main}>
@@ -66,16 +110,28 @@ class UILogin extends Component {
             Sign in
           </Typography>
 
-          <form className={classes.form}>
+          <form className={classes.form} onSubmit={this.handleSubmit}>
 
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="email">Email Address</InputLabel>
-              <Input id="email" name="email" autoComplete="email" autoFocus />
+              <Input 
+                id="email" 
+                name="email" 
+                autoComplete="email" 
+                autoFocus 
+                value={this.state.username}
+                onChange={this.handleChange("username")}/>
             </FormControl>
 
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="password">Password</InputLabel>
-              <Input name="password" type="password" id="password" autoComplete="current-password" />
+              <Input 
+                name="password" 
+                type="password" 
+                id="password" 
+                autoComplete="current-password" 
+                value={this.state.password}
+                onChange={this.handleChange("password")}/>
             </FormControl>
 
             <Button
@@ -84,6 +140,7 @@ class UILogin extends Component {
               variant="contained"
               color="primary"
               className={classes.submit}
+              onClick={this.handleSubmit}
             >
               Sign in
             </Button>
@@ -98,4 +155,4 @@ UILogin.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(UILogin);
+export default withStyles(styles)(withRouter(UILogin));
