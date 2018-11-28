@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import request from 'superagent';
 
-import AllQuestions from './containers/AllQuestions';
-// import Questions from './containers/Questions';
-
 import './App.css';
+
+import UIDashboard from './containers/UIDashboard';
 
 class App extends Component {
   componentDidMount() {
@@ -17,7 +16,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <AllQuestions />
+        <UIDashboard />
       </div>
     );
   }
