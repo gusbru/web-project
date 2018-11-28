@@ -114,8 +114,6 @@ class UIDashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      authenticated: this.props.location.state.authenticated,
-      username: this.props.location.state.username,
       open: true,
       questionsInformations: [],
     };
@@ -127,7 +125,6 @@ class UIDashboard extends React.Component {
     .get('http://localhost:3005/api/questoes')
     .then(res => this.setState({questionsInformations: res.body}))
     .catch(err => console.log(err));
-
   };
 
   handleDrawerOpen = () => {
@@ -138,14 +135,15 @@ class UIDashboard extends React.Component {
     this.setState({ open: false });
   };
 
-  handleDrawerClick = (event) => {
-    console.log("drawer clicked", event);
-    if (event === "Sair") {
-      localStorage.setItem("token", "");
-      this.setState({
-        authenticated: false
-      });
-    }
+  handleDrawerClick = (location) => {
+    console.log("drawer clicked", location);
+    this.props.history.push(location);
+    // if (event === "Sair") {
+    //   localStorage.setItem("token", "");
+    //   this.setState({
+    //     authenticated: false
+    //   });
+    // }
   }
 
   checkAuthenticated = () => {
@@ -219,7 +217,6 @@ class UIDashboard extends React.Component {
           {this.state.open &&
             <div className={classes.username}>
               <p>Bem vindo</p>
-              <p>{this.state.username.toUpperCase()}</p>
             </div>
           }
           <Divider />
@@ -258,7 +255,8 @@ class UIDashboard extends React.Component {
           </Typography>
           */}
           <div className={classes.tableContainer}>
-            <UISimpleTable questoes={questionsInformations} />
+            {/* <UISimpleTable questoes={questionsInformations} /> */}
+            {this.props.component}
           </div>
         </main>
       </div>

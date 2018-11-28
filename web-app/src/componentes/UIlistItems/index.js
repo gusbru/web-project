@@ -12,22 +12,27 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 
 export const mainListItems = ([
   {
-    key : "Dashboard",
+    key : "main",
     text : "Dashboard",
     type: <DashboardIcon />
   },
   {
-    key : "Orders",
-    text : "Orders",
+    key : "questoes",
+    text : "Questoes",
     type: <ShoppingCartIcon />
   },
   {
-    key : "Reports",
+    key : "alunos",
+    text : "Alunos",
+    type: <ShoppingCartIcon />
+  },
+  {
+    key : "reports",
     text : "Reports",
     type: <BarChartIcon />
   },
   {
-    key : "Sair",
+    key : "logout",
     text : "Sair",
     type: <LayersIcon />
   },
