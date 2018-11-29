@@ -136,7 +136,7 @@ routes.put('/:codigoQuestao', [auth, isProfessor], wrapAsync(async (req, res) =>
     req.orm.query(
       `UPDATE ${tabela.alternativas}
       SET descricao = '${alternativa}'
-      WHERE codigo_questao=${codigoQuestao} AND alternativa=${opcoesAlternativas[index]}`,
+      WHERE codigo_questao='${codigoQuestao}' AND alternativa='${opcoesAlternativas[index]}'`,
       { type: req.orm.QueryTypes.UPDATE }
     );
   });
