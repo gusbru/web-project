@@ -8,15 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 
-const styles = {
-  root: {
-    width: '100%',
-    overflowX: 'auto',
-  },
-  table: {
-    minWidth: 700,
-  },
-};
+import styles from '../UISimpleTable/styles';
 
 function UISimpleTable(props) {
   const { classes, questoes } = props;

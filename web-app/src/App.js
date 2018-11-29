@@ -3,8 +3,8 @@ import request from 'superagent';
 
 import './App.css';
 
-import UIDashboard from './containers/UIDashboard';
-import Home from './containers/Home';
+//import UIDashboard from './containers/UIDashboard';
+//import Home from './containers/Home';
 
 class App extends Component {
   componentDidMount() {
