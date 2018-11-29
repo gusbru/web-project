@@ -106,8 +106,8 @@ routes.post('/', [auth, isProfessor], wrapAsync(async (req, res) => {
 
 routes.put('/:codigoQuestao', [auth, isProfessor], wrapAsync(async (req, res) => {
   const { codigoQuestao } = req.params;
-  const { enunciado, resposta_correta } = req.body;
-  const { tabela } = req.orm;
+  const { enunciado, resposta_correta, alternativas } = req.body;
+  const { tabela, opcoesAlternativas } = req.orm;
 
   const questaoAtual = await req.orm.query(
     `SELECT * FROM ${tabela.questoes}
@@ -131,6 +131,16 @@ routes.put('/:codigoQuestao', [auth, isProfessor], wrapAsync(async (req, res) =>
     WHERE codigo_questao = ${codigoQuestao}`,
     { type: req.orm.QueryTypes.SELECT }
   );
+
+  alternativas.forEach((alternativa, index) => {
+    req.orm.query(
+      `UPDATE ${tabela.alternativas}
+      SET descricao = '${alternativa}'
+      WHERE codigo_questao=${codigoQuestao} AND alternativa=${opcoesAlternativas[index]}`,
+      { type: req.orm.QueryTypes.UPDATE }
+    );
+  });
+  
 
   res.send(questaoAtualizada);
 }));
