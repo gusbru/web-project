@@ -3,6 +3,7 @@ package com.example.gusbru5.android_app;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -22,11 +23,12 @@ public class Question extends AppCompatActivity {
     private TextView txtTitle, txtQuestao;
     private ProgressBar progressBar;
     private RadioGroup radioAlternativas;
-    private RadioButton alternativaA, alternativaB, alternativaC, alternativaD, alternativaE;
+    private RadioButton alternativaA, alternativaB, alternativaC, alternativaD;
     private Button btnNext;
-    private int currentQuestion;
+    private int currentQuestion, score;
     private JSONArray questoes;
     private ArrayList<String> respostas;
+    private JSONObject questao;
 
 
     @Override
@@ -43,11 +45,11 @@ public class Question extends AppCompatActivity {
         alternativaB = findViewById(R.id.alternativaB);
         alternativaC = findViewById(R.id.alternativaC);
         alternativaD = findViewById(R.id.alternativaD);
-        alternativaE = findViewById(R.id.alternativaE);
         btnNext = findViewById(R.id.btnNext);
 
         currentQuestion = intent.getIntExtra("questaoId", 0);
         respostas = intent.getStringArrayListExtra("respostas");
+        score = intent.getIntExtra("score", 0);
 
         try
         {
@@ -55,13 +57,12 @@ public class Question extends AppCompatActivity {
             progressBar.setMax(questoes.length());
             progressBar.setProgress(currentQuestion+1);
             txtTitle.setText("Questao " + String.valueOf(currentQuestion+1) + " de " + String.valueOf(questoes.length()));
-            JSONObject questao = (JSONObject) questoes.get(currentQuestion);
+            questao = (JSONObject) questoes.get(currentQuestion);
             txtQuestao.setText(questao.getString("enunciado"));
-            alternativaA.setText("1");
-            alternativaB.setText("2");
-            alternativaC.setText("3");
-            alternativaD.setText("4");
-            alternativaE.setText("5");
+            alternativaA.setText(questao.getString("A"));
+            alternativaB.setText(questao.getString("B"));
+            alternativaC.setText(questao.getString("C"));
+            alternativaD.setText(questao.getString("D"));
 
             if (currentQuestion+1 == questoes.length())
             {
@@ -90,6 +91,19 @@ public class Question extends AppCompatActivity {
                 else
                 {
                     respostas.add(currentQuestion, resposta);
+
+                    try
+                    {
+                        if (resposta.equals(questao.getString("resposta_correta")))
+                            score++;
+                    }
+                    catch (JSONException e)
+                    {
+                        Log.e("JSON", e.getMessage());
+                    }
+
+
+
                     if (currentQuestion+1 == questoes.length())
                     {
                         // go to review activity
@@ -122,8 +136,6 @@ public class Question extends AppCompatActivity {
             return "C";
         else if (id == alternativaD.getId())
             return "D";
-        else if (id == alternativaE.getId())
-            return "E";
         else
             return "";
 
@@ -135,6 +147,7 @@ public class Question extends AppCompatActivity {
         bundle.putInt("questaoId", currentQuestion+1);
         bundle.putString("questoes", questoes.toString());
         bundle.putStringArrayList("respostas", respostas);
+        bundle.putInt("score", score);
         Intent intent = new Intent(this, Question.class);
         intent.putExtras(bundle);
         startActivity(intent);
@@ -144,6 +157,8 @@ public class Question extends AppCompatActivity {
     {
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("respostas", respostas);
+        bundle.putInt("score", score);
+        bundle.putInt("numberOfQuestions", questoes.length());
         Intent intent = new Intent(this, Review.class);
         intent.putExtras(bundle);
         startActivity(intent);
