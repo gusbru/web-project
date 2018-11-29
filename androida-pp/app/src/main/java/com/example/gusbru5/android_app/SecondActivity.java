@@ -85,7 +85,6 @@ public class SecondActivity extends AppCompatActivity {
         Intent intent = new Intent(this, Atividades.class);
         intent.putExtras(bundle);
         startActivity(intent);
-        finish();
     }
 
 

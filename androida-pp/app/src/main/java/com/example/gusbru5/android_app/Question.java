@@ -27,7 +27,7 @@ public class Question extends AppCompatActivity {
     private Button btnNext;
     private int currentQuestion, score;
     private JSONArray questoes;
-    private ArrayList<String> respostas;
+    private ArrayList<String> respostas, corretas;
     private JSONObject questao;
 
 
@@ -49,6 +49,7 @@ public class Question extends AppCompatActivity {
 
         currentQuestion = intent.getIntExtra("questaoId", 0);
         respostas = intent.getStringArrayListExtra("respostas");
+        corretas = intent.getStringArrayListExtra("corretas");
         score = intent.getIntExtra("score", 0);
 
         try
@@ -84,17 +85,21 @@ public class Question extends AppCompatActivity {
             public void onClick(View v) {
                 int alternativa = radioAlternativas.getCheckedRadioButtonId();
                 String resposta = idToLetter(alternativa);
+                String correta;
                 if (resposta.isEmpty())
                 {
                     Toast.makeText(getApplicationContext(),"Selecione uma Resposta",Toast.LENGTH_LONG).show();
                 }
                 else
                 {
-                    respostas.add(currentQuestion, resposta);
 
                     try
                     {
-                        if (resposta.equals(questao.getString("resposta_correta")))
+                        correta = questao.getString("resposta_correta");
+                        respostas.add(currentQuestion, resposta);
+                        corretas.add(currentQuestion, correta);
+
+                        if (resposta.equals(correta))
                             score++;
                     }
                     catch (JSONException e)
@@ -147,16 +152,19 @@ public class Question extends AppCompatActivity {
         bundle.putInt("questaoId", currentQuestion+1);
         bundle.putString("questoes", questoes.toString());
         bundle.putStringArrayList("respostas", respostas);
+        bundle.putStringArrayList("corretas", corretas);
         bundle.putInt("score", score);
         Intent intent = new Intent(this, Question.class);
         intent.putExtras(bundle);
         startActivity(intent);
+        finish();
     }
 
     private void goToReview()
     {
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("respostas", respostas);
+        bundle.putStringArrayList("corretas", corretas);
         bundle.putInt("score", score);
         bundle.putInt("numberOfQuestions", questoes.length());
         Intent intent = new Intent(this, Review.class);
