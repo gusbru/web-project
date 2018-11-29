@@ -128,7 +128,7 @@ public class Atividades extends AppCompatActivity {
         SharedPreferences sharedPreferences = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         String ip = sharedPreferences.getString("ip", "");
         String port = sharedPreferences.getString("port", "");
-        URL url = new URL("http://" + ip + ":" + port + "/api/me/questoes");
+        URL url = new URL("http://" + ip + ":" + port + "/api/questoes");
 
         // 1. create http connection
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -186,6 +186,7 @@ public class Atividades extends AppCompatActivity {
         bundle.putString("questoes", questions.toString());
         ArrayList<String> respostas = new ArrayList<>(questions.length());
         bundle.putStringArrayList("respostas", respostas);
+        bundle.putInt("score", 0);
         Intent intent = new Intent(this, Question.class);
         intent.putExtras(bundle);
         startActivity(intent);
