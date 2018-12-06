@@ -5,11 +5,14 @@
   "dependencies": {
     "@material-ui/core": "^3.6.0",
     "@material-ui/icons": "^3.0.1",
+    "chromedriver": "^2.44.1",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.0.5",
-    "superagent": "^4.0.0"
+    "selenium-webdriver": "^4.0.0-alpha.1",
+    "superagent": "^4.0.0",
+    "webdriverio": "^4.14.1"
   },
   "scripts": {
     "start": "react-scripts start",
